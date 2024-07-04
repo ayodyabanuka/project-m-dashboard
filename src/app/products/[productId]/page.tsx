@@ -104,7 +104,8 @@ const ProductEdit: React.FC = () => {
       // Upload new images to Firebase Storage and get their URLs
       const uploadedImageUrls = await Promise.all(
         newImages.map(async (image) => {
-          const imageRef = ref(storage, `products/${productId}/${image.name}`);
+          const imageName = `${Date.now()}_${image.name}`;
+          const imageRef = ref(storage, `images/${imageName}`);
           await uploadBytes(imageRef, image);
           return await getDownloadURL(imageRef);
         })
