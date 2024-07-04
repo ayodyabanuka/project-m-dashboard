@@ -1,0 +1,32 @@
+{
+  "printWidth": 80,
+  "tabWidth": 2,
+  "trailingComma": "none",
+  "quoteProps": "consistent",
+  "singleQuote": true,
+  "semi": true,
+  "plugins": ["prettier-plugin-tailwindcss"],
+  "importOrder": [
+    "^react",
+    "<THIRD_PARTY_MODULES>",
+    "^@(?!next\\/)(.*)$",
+    "^@next\\/.*$",
+    "^[./]"
+  ],
+  "importOrderSeparation": false,
+  "importOrderSortSpecifiers": true,
+  "overrides": [
+    {
+      "files": "*.ts",
+      "options": {
+        "parser": "typescript"
+      }
+    },
+    {
+      "files": "*.tsx",
+      "options": {
+        "parser": "typescript"
+      }
+    }
+  ]
+}
