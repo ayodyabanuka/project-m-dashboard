@@ -181,9 +181,9 @@ const ProductEdit: React.FC = () => {
             required
           >
             <option value="">Select Main Category</option>
-            <option value="men">Men</option>
-            <option value="women">Women</option>
-            <option value="unisex">Unisex</option>
+            <option value="Men">Men</option>
+            <option value="Women">Women</option>
+            <option value="Unisex">Unisex</option>
           </select>
         </div>
         <div>
