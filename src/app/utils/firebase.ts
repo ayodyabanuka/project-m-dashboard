@@ -3,13 +3,13 @@ import { getFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 
 const firebaseConfig = {
-  apiKey: process.env.API_KEY,
-  authDomain: process.env.AUTH_DOMAIN,
-  projectId: process.env.PROJECT_ID,
-  storageBucket: process.env.STORAGE_BUCKET,
-  messagingSenderId: process.env.MESSAGING_SENDER_ID,
-  appId: process.env.APP_ID,
-  measurementId: process.env.MEASUREMENT_ID
+  apiKey: 'AIzaSyDIbJnq6mF_G2MrF5WPJq-rEfLBz6piu7U',
+  authDomain: 'project-m-e173a.firebaseapp.com',
+  projectId: 'project-m-e173a',
+  storageBucket: 'project-m-e173a.appspot.com',
+  messagingSenderId: '1060804860105',
+  appId: '1:1060804860105:web:cd64ee5627d8c598419518',
+  measurementId: 'G-QM17VRQSTM'
 };
 
 const app = initializeApp(firebaseConfig);
