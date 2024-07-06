@@ -17,7 +17,8 @@ export interface Order {
   address: string;
   city: string;
   postalCode: string;
-  phone: string;
+  phone1: string;
+  phone2: string;
   orderDate: Date;
   status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled'; // Example status options
 }

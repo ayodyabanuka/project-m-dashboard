@@ -53,7 +53,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     // Save user data to state and cookies
     const user = { id: userDoc.id, name: userData.name, email: userData.email };
     setUser(user);
-    Cookies.set('user', JSON.stringify(user));
+    Cookies.set('staff', JSON.stringify(user));
 
     // Redirect to the dashboard or another page
     router.push('/dashboard');

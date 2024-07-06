@@ -1,15 +1,19 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { useParams } from 'next/navigation';
 import { Order } from '@/types/orders.type';
 import { db } from '@/app/utils/firebase';
+import Invoice from '@/components/invoice';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
 const OrderDetailsPage: React.FC = () => {
   const params = useParams();
   const orderId = params.orderId;
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
+  const invoiceRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchOrder = async () => {
@@ -48,6 +52,34 @@ const OrderDetailsPage: React.FC = () => {
     }
   };
 
+  const handleDownload = () => {
+    const generatePDF = async () => {
+      if (!invoiceRef.current) {
+        return; // Return early if ref is not yet available
+      }
+
+      // Configure jsPDF for A5 size
+      const pdf = new jsPDF('portrait', 'mm', 'a5');
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+
+      // Get invoice content as image with proper scale
+      const canvas = await html2canvas(invoiceRef.current, {
+        scale: 2
+      });
+
+      const imgData = canvas.toDataURL('image/png');
+
+      // Add image to PDF and adjust size to fit A5 dimensions
+      pdf.addImage(imgData, 'PNG', 0, 0, pageWidth, pageHeight);
+
+      // Save PDF
+      pdf.save(`invoice_${order?.id}.pdf`);
+    };
+
+    generatePDF();
+  };
+
   if (loading) {
     return <p>Loading...</p>;
   }
@@ -57,53 +89,10 @@ const OrderDetailsPage: React.FC = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 text-slate-400">
-      <div className="my-6 text-2xl font-bold">Order Details</div>
-      <div className="mb-4 rounded-2xl border p-6">
-        <div>
-          <strong>Order ID:</strong> {order.id}
-        </div>
-        <div>
-          <strong>Customer Name:</strong> {order.name}
-        </div>
-        <div>
-          <strong>Contact Number:</strong> {order.phone}
-        </div>
-        <div>
-          <strong>Total Amount:</strong> LKR {order.total}
-        </div>
-        <div>
-          <strong>Order Date:</strong> {order.orderDate.toString()}
-        </div>
-        <div>
-          <strong>Shipping Address:</strong>{' '}
-          {order.address + ',' + order.city + ',' + order.postalCode}
-        </div>
-        <div>
-          <strong>Status:</strong> {order.status}
-        </div>
-      </div>
-      <div className="mb-4">
-        <div className="mb-2 text-xl font-bold">Order Items</div>
-
-        {order.items.map((item, index) => (
-          <div key={index} className="mb-2 rounded-2xl border p-6">
-            <div>
-              <strong>Product Name:</strong> {item.name}
-            </div>
-            <div>
-              <strong>Quantity:</strong> {item.quantity}
-            </div>
-            <div>
-              <strong>Size:</strong> {item.size}
-            </div>
-            <div>
-              <strong>Price:</strong> {item.price}
-            </div>
-          </div>
-        ))}
-      </div>
-      <div>
+    <div className="container mx-auto mt-20 grid grid-cols-2 px-4 text-slate-400">
+      <Invoice order={order} invoiceRef={invoiceRef} />
+      <div className="">
+        <div>Current Status : {order.status}</div>
         <h2 className="mb-2 text-xl font-bold">Change Order Status</h2>
         <div className="flex space-x-4">
           {['pending', 'processing', 'shipped', 'delivered', 'cancelled'].map(
@@ -127,6 +116,15 @@ const OrderDetailsPage: React.FC = () => {
               </button>
             )
           )}
+        </div>
+        <div className="flex flex-col gap-4 p-10">
+          <div className="text-lg font-bold">Download Invoice </div>
+          <button
+            className="w-fit rounded-md bg-slate-700 px-2 py-1 hover:bg-slate-800"
+            onClick={handleDownload}
+          >
+            Download PDF
+          </button>
         </div>
       </div>
     </div>
