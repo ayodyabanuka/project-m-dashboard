@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { useParams } from 'next/navigation';
-import { Order } from '@/types/orders.type';
+import { Order, OrderItem } from '@/types/orders.type';
 import { db } from '@/app/utils/firebase';
 import Invoice from '@/components/invoice';
 import html2canvas from 'html2canvas';
@@ -10,10 +10,11 @@ import jsPDF from 'jspdf';
 
 const OrderDetailsPage: React.FC = () => {
   const params = useParams();
-  const orderId = params.orderId;
+  const orderId = params?.orderId;
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
   const invoiceRef = useRef<HTMLDivElement>(null);
+  const [stat, setStat] = useState('');
 
   useEffect(() => {
     const fetchOrder = async () => {
@@ -38,6 +39,30 @@ const OrderDetailsPage: React.FC = () => {
     }
   }, [orderId]);
 
+  const handleOrderStatusChange = async (
+    userEmail: string,
+    orderDetails: OrderItem[],
+    status: string
+  ) => {
+    try {
+      const response = await fetch('/api/sendOrderStatusEmail', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ userEmail, orderDetails, status })
+      });
+
+      if (response.ok) {
+        console.log('Status email sent successfully');
+      } else {
+        console.error('Failed to send status email');
+      }
+    } catch (error) {
+      console.error('Error updating order status:', error);
+    }
+  };
+
   const handleChangeStatus = async (
     newStatus: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled'
   ) => {
@@ -46,7 +71,9 @@ const OrderDetailsPage: React.FC = () => {
     try {
       const docRef = doc(db, 'orders', order.id);
       await updateDoc(docRef, { status: newStatus });
+      setStat(newStatus);
       setOrder({ ...order, status: newStatus });
+      await handleOrderStatusChange(order.email, order.items, newStatus);
     } catch (error) {
       console.error('Error updating order status:', error);
     }
@@ -110,7 +137,7 @@ const OrderDetailsPage: React.FC = () => {
                   )
                 }
                 className={`rounded px-4 py-2 text-white ${order.status === status ? 'bg-slate-600' : 'bg-slate-800 hover:bg-slate-700'}`}
-                disabled={order.status === status}
+                disabled={order.status === status || stat === 'cancelled'}
               >
                 {status}
               </button>

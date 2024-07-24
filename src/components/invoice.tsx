@@ -91,9 +91,9 @@ const Invoice: React.FC<InvoiceProps> = ({ order, invoiceRef }) => {
         <div className="flex flex-col items-end justify-end">
           <div className="text-right text-xl font-bold">Project M</div>
           <div className="text-right">
-            60/1/D Rawatawatta Road,
+            60/1/D Rawatawatte Road,
             <br />
-            Moratuwa, Rawathawatta , 10400 <br />
+            Moratuwa , 10400 <br />
             Sri Lanka
           </div>
         </div>

@@ -13,6 +13,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 const inter = Inter({ subsets: ['latin'] });
 import Cookies from 'js-cookie';
+import { BsTicketFill } from 'react-icons/bs';
 
 export default function RootLayout({
   children
@@ -76,6 +77,12 @@ export default function RootLayout({
                   className={`flex  w-full items-center gap-2 rounded-xl p-2 py-3 text-center text-slate-400 hover:bg-slate-800 ${path === '/banners' ? 'bg-slate-800' : 'text-slate-400'}`}
                 >
                   <PiFlagBannerFill /> Banners
+                </Link>
+                <Link
+                  href={'/promos'}
+                  className={`flex  w-full items-center gap-2 rounded-xl p-2 py-3 text-center text-slate-400 hover:bg-slate-800 ${path === '/promos' ? 'bg-slate-800' : 'text-slate-400'}`}
+                >
+                  <BsTicketFill /> Promos
                 </Link>
               </div>
               <div className="w-full px-2 py-2 font-light text-slate-500">
