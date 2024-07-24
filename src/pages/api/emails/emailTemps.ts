@@ -1,6 +1,6 @@
 import { OrderItem } from '@/types/orders.type';
 
-export const emailTemplates = {
+const emailTemplates = {
   orderCancelled: (orderDetails: OrderItem[]) => `
     <div style="font-family: Arial, sans-serif;">
       <h2>Your Order has been Cancelled</h2>
@@ -75,3 +75,5 @@ export const emailTemplates = {
     </div>
   `
 };
+
+export default emailTemplates;

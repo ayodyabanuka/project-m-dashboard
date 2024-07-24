@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { emailTemplates } from '../emails/emailTemps';
 import { sendEmail } from './sendEmail';
+import emailTemplates from './emails/emailTemps';
 
 export default async function handler(
   req: NextApiRequest,
