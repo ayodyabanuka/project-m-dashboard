@@ -26,7 +26,7 @@ interface Product {
 const ProductEdit: React.FC = () => {
   const router = useRouter();
   const params = useParams();
-  const productId = params.productId;
+  const productId = params?.productId;
   const [loading, setLoading] = useState(true);
   const [product, setProduct] = useState<Product>({
     id: '',
